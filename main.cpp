@@ -17,7 +17,7 @@ int main()
     // comments to display understanding
 
     int status;         // will hold result of getaddrinfo
-    const char* portNum = "58426";
+    const char* portNum = "58426";  // Ive decided pseudo-randomly on this port
     addrinfo hints{};   // a struct of information to pass to getaddrinfo
     addrinfo *servinfo; // the titular info that will be gotten by getaddrinfo
 
@@ -43,6 +43,21 @@ int main()
         std::cout << "error in obtaining socket descriptor";
         exit(1);
     }
+
+    // bind the socket descriptor to the port
+    if(bind(sockDesc, servinfo->ai_addr, servinfo->ai_addrlen) == -1)
+    {
+        std::cout << "error in binding socket file descriptor to port";
+        exit(1);
+    }
+
+    // Establish a connection based on all the work we've done so far
+    if(connect(sockDesc, servinfo->ai_addr, servinfo->ai_addrlen) == -1)
+    {
+        std::cout << "error in establishing connection";
+        exit(1);
+    }
+
 
     freeaddrinfo(servinfo);
     return 0;
