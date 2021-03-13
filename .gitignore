@@ -10,9 +10,7 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
-Client/cmake-build-debug
 Client/.idea
-Server/cmake-build-debug
 Server/.idea
 
 /.idea
