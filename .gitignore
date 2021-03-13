@@ -14,3 +14,5 @@ Client/cmake-build-debug
 Client/.idea
 Server/cmake-build-debug
 Server/.idea
+
+/.idea
