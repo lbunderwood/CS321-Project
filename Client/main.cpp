@@ -17,8 +17,13 @@ int main(int argc, char** argv)
         port = std::stoi(argv[2]);
     }
 
+    std::cout << "Arguments processed successfully!\n\n";
+
     Connection server(address, port);
     server.connect();
     server.sendInfo("Hello, world!");
+
+    std::cout << "Message sent, program complete.\n\n";
+    while(true){} // hang
 }
 

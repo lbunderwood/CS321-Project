@@ -11,12 +11,14 @@ Connection::Connection(std::string name, int port) : address_(std::move(name)), 
 {
     addrInfo_ = std::make_unique<addrinfo>();
     setup();
+    std::cout << "Connection Constructor successful!\n\n";
 }
 
 //destructor - written explicitly to close network connection
 Connection::~Connection()
 {
     freeaddrinfo(addrInfo_.get());
+    std::cout << "Connection Destructor successful!\n\n";
 }
 
 void Connection::setup()
@@ -49,14 +51,14 @@ void Connection::setup()
     // handle errors
     if (sockDesc_ == errno)
     {
-        std::cout << "error in obtaining socket descriptor";
+        std::cout << "error in obtaining socket descriptor\n";
         throw;
     }
 
     // bind the socket descriptor to the port and handle errors
     if(bind(sockDesc_, addrInfo_->ai_addr, addrInfo_->ai_addrlen) == errno)
     {
-        std::cout << "error in binding socket file descriptor to port";
+        std::cout << "error in binding socket file descriptor to port\n";
         throw;
     }
 }
@@ -73,11 +75,12 @@ bool Connection::sendUntilComplete(const std::string& info, int socket)
         int result = send(socket, (const void*)&cInfo[sent], length - sent, 0);
         if (result == errno)
         {
-            std::cout << "error in sending information to server";
+            std::cout << "error in sending information to server\n";
             return false;
         }
         sent += result;
     }
+
     return true;
 }
 
@@ -108,6 +111,7 @@ std::string Connection::recvString(int socket)
 // returns bool if successful
 bool Connection::connect() const
 {
+    std::cout << "Attempting to establish connection\n\n";
     return ::connect(sockDesc_, addrInfo_->ai_addr, addrInfo_->ai_addrlen) != errno;
 }
 
@@ -134,6 +138,8 @@ bool Connection::acceptIncoming()
         return false;
     }
     sockets_.insert({ sock, clientAddr });
+
+    std::cout << "Connection established!\n\n";
     return true;
 }
 
@@ -153,6 +159,8 @@ bool Connection::sendInfo(const std::string& info) const
             if (!sendUntilComplete(info, n.first)) return false;
         }
     }
+
+    std::cout << "Message sent successfully!\n\n";
     return true;
 }
 
@@ -172,5 +180,7 @@ std::vector<std::string> Connection::receiveInfo() const
     {
         output.push_back(recvString(n.first));
     }
+
+    std::cout << "Message received successfully!\n\n";
     return output;
 }
