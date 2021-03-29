@@ -88,6 +88,12 @@
 		<Unit filename="/mnt/c/Users/Luke U/source/repos/CS321-Project/Lib/Connection.h">
 			<Option target="Server"/>
 		</Unit>
+		<Unit filename="/mnt/c/Users/Luke U/source/repos/CS321-Project/Server/Chat.cpp">
+			<Option target="Server"/>
+		</Unit>
+		<Unit filename="/mnt/c/Users/Luke U/source/repos/CS321-Project/Server/Chat.h">
+			<Option target="Server"/>
+		</Unit>
 		<Unit filename="/mnt/c/Users/Luke U/source/repos/CS321-Project/Server/main.cpp">
 			<Option target="Server"/>
 		</Unit>

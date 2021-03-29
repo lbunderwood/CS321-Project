@@ -18,6 +18,9 @@
 #include <iostream>
 #include <cstddef>
 
+// global variable declaration
+int PORT = 58426;
+
 class Connection
 {
 public:     // Constructors and Destructor
@@ -30,14 +33,13 @@ public:     // Constructors and Destructor
     // gets address info, socket descriptor, and binds to port
     Connection(std::string name, int port);
 
-    // copy and move constructors and assignment operators will not be used,
-    // primarily because I do not know how that would work with the network stuff
-    // if you need a connection, use the instance of the class that you have.
-    // if you want to make new connections, just make a new instance of the class
+    // copying is not allowed, but moving is fine, and will be defined automatically.
+    // We just cannot have two objects attempting to manage the same connection.
     Connection(const Connection& other) = delete;
     Connection& operator=(const Connection& other) = delete;
-    Connection(Connection&& other) = delete;
-    Connection& operator=(Connection&& other) = delete;
+
+    Connection(Connection&& other) = default;
+    Connection& operator=(Connection&& other) = default;
 
     // destructor - written explicitly to close network connection
     ~Connection();

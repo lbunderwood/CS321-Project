@@ -9,8 +9,6 @@
 
 int main(int argc, char** argv)
 {
-    int port = 58426;
-
     // Print welcome message and collect info from user
     std::cout << "Hello! Welcome to Underwood Direct Message Service!\n\n"
                  << "Please enter the IPv4 address of the server you'd like to connect to: ";
@@ -24,7 +22,7 @@ int main(int argc, char** argv)
     std::getline(std::cin, theirName);
 
     // establish server connection and send an ip you'd like to connect with
-    Connection server(servAddr, port);
+    Connection server(servAddr, PORT);
     server.connect();
     server.sendInfo(myName);
     server.sendInfo(theirName);

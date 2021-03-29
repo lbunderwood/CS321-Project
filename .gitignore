@@ -12,5 +12,6 @@ _deps
 
 Client/.idea
 Server/.idea
+Lib/.idea
 
 /.idea

@@ -3,4 +3,4 @@ project(Server)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Server main.cpp ../Lib/Connection.cpp ../Lib/Connection.h)
+add_executable(Server main.cpp ../Lib/Connection.cpp ../Lib/Connection.h Chat.cpp Chat.h)

@@ -6,19 +6,13 @@
 #include <iostream>
 #include <string>
 #include "../Lib/Connection.h"
+#include "Chat.h"
 
 int main()
 {
-    int port = 58426;
-    Connection clients("", port);
-
     while(true)
     {
-        clients.acceptIncoming();
-        auto msgs = clients.receiveInfo();
-        for (auto n : msgs)
-        {
-            std::cout << "\n" << n << "\n";
-        }
+        Connection openConnection("", PORT);
+
     }
 }
