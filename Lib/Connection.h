@@ -49,12 +49,6 @@ private:
     // called by constructor
     void setup();
 
-    // sendUntilComplete private member function
-    // called by sendInfo to make sure that messages send completely
-    static bool sendUntilComplete(const std::string& info, int socket);
-
-    static std::string recvString(int socket);
-
 public:     // Public member functions
 
     // connect public member function
@@ -74,7 +68,7 @@ public:     // Public member functions
 
     // receiveInfo public member function
     // string of information from connected host
-    std::vector<std::string> receiveInfo() const;
+    std::string receiveInfo() const;
 
 private:    // private member variables
 
@@ -90,8 +84,8 @@ private:    // private member variables
     // holds the socket descriptor for an outgoing connection
     int sockDesc_;
 
-    // holds the socket descriptors for incoming connections
-    std::map<int, sockaddr_storage> sockets_;
+    // holds the client's socket address
+    sockaddr_storage sockAddr_;
 };
 
 

@@ -12,14 +12,13 @@ int main()
     int port = 58426;
     Connection clients("", port);
 
-    std::cout << "Connection available, awaiting connection\n\n";
-
-    while (true)
+    while(true)
     {
         clients.acceptIncoming();
-        for (auto n : clients.receiveInfo())
+        auto msgs = clients.receiveInfo();
+        for (auto n : msgs)
         {
-            std::cout << n;
+            std::cout << "\n" << n << "\n";
         }
     }
 }
