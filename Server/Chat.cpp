@@ -7,14 +7,14 @@
 // three-parameter constructor
 // takes a client and the two names that they have sent
 Chat::Chat(Connection& client, const std::string& clientName, const std::string& otherName)
-    : firstClient_(std::move(client)), firstUsrn_(clientName), secondUsrn_(otherName), secondClient_("", PORT) {}
+    : firstClient_(std::move(client)), firstUsrn_(clientName), secondUsrn_(otherName), secondClient_("") {}
 
 void Chat::addSecondClient(Connection& secondClient)
 {
     secondClient_ = std::move(secondClient);
 }
 
-void Chat::updateMsgs()
+void Chat::updateMsgs() const
 {
     std::string msg1 = firstClient_.receiveInfo();
     if (!msg1.empty() && msg1 != "!leave")
@@ -28,4 +28,14 @@ void Chat::updateMsgs()
         firstClient_.sendInfo(msg2);
     }
     // TODO: have something happen when !leave is sent
+}
+
+std::pair<std::string, std::string> Chat::getNames() const
+{
+    return {firstUsrn_, secondUsrn_};
+}
+
+bool Chat::broadcast(const std::string& msg) const
+{
+    return firstClient_.sendInfo(msg) && secondClient_.sendInfo(msg);
 }

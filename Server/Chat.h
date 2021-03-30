@@ -13,12 +13,13 @@ class Chat
 {
 public: // Constructors and destructor
 
-    // no copy, move, or default construction allowed
-    Chat() = delete;
+    // no copy or default construction allowed
+    // move is okay, we just can't have duplicate Connection objects
+    Chat():firstClient_(""), secondClient_("") {throw;}
     Chat(const Chat& other) = delete;
     Chat& operator=(const Chat& other) = delete;
-    Chat(Chat&& other) = delete;
-    Chat& operator=(Chat&& other) = delete;
+    Chat(Chat&& other) = default;
+    Chat& operator=(Chat&& other) = default;
 
     // three-parameter constructor
     // takes a client and the two names that they have sent
@@ -32,7 +33,11 @@ public: // Public member functions
 
     void addSecondClient(Connection& secondClient);
 
-    void updateMsgs();
+    void updateMsgs() const;
+
+    std::pair<std::string, std::string> getNames() const;
+
+    bool broadcast(const std::string& msg) const;
 
 private: // Private member variables
 
@@ -49,4 +54,4 @@ private: // Private member variables
 };
 
 
-#endif //SERVER_CHAT_H
+#endif //CHAT_H

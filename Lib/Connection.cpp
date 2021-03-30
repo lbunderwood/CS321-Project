@@ -4,11 +4,11 @@
 
 #include "Connection.h"
 
-// two-parameter constructor
-// takes a string specifying an address (empty string if self), and a port number
+// one-parameter constructor
+// takes a string specifying an address (empty string if self)
 // gets address info, socket descriptor, and binds to port
-Connection::Connection(std::string name, int port)
-    : addrInfo_(nullptr), address_(std::move(name)), portNum_(port), sockDesc_(0)
+Connection::Connection(std::string name)
+    : addrInfo_(nullptr), address_(std::move(name)), sockDesc_(0)
 {
     setup();
 }
@@ -38,7 +38,7 @@ void Connection::setup()
 
     // get address info, store status in status, store info in *servinfo, and handle errors
     addrinfo* rawAddr;
-    int status = getaddrinfo(cName, std::to_string(portNum_).c_str(), &hints, &(rawAddr));
+    int status = getaddrinfo(cName, std::to_string(PORT).c_str(), &hints, &(rawAddr));
     if (status != 0)
     {
         perror("getaddrinfo call failed.");

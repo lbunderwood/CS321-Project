@@ -18,9 +18,6 @@
 #include <iostream>
 #include <cstddef>
 
-// global variable declaration
-int PORT = 58426;
-
 class Connection
 {
 public:     // Constructors and Destructor
@@ -31,7 +28,7 @@ public:     // Constructors and Destructor
     // two-parameter constructor
     // takes a string specifying an address (empty string if self), and a port number
     // gets address info, socket descriptor, and binds to port
-    Connection(std::string name, int port);
+    Connection(std::string name);
 
     // copying is not allowed, but moving is fine, and will be defined automatically.
     // We just cannot have two objects attempting to manage the same connection.
@@ -77,9 +74,6 @@ private:    // private member variables
     // holds the address of the host we're connecting to
     std::string address_;
 
-    // holds the port number
-    int portNum_;
-
     // the struct of information about our connection
     std::unique_ptr<addrinfo> addrInfo_;
 
@@ -88,6 +82,11 @@ private:    // private member variables
 
     // holds the client's socket address
     sockaddr_storage sockAddr_;
+
+public:
+
+    // port number
+    const static int PORT = 58426;
 };
 
 
