@@ -1,9 +1,15 @@
 # CS321-Project
+### General Information:
 A simple direct-messaging project to learn how to use network sockets in C++ for CS321 Operating Systems at UAF.
 
 This software includes two programs, named Client and Server, which act as their names suggest to provide a service that allows two users running the client program to send each other text messages. Each client is required to provide the ip of the server, an alias to use as a username, and the alias of the person they'd like to correspond with. This enables any users of this service to set up their own local server and to have as many pairs of people correspond using it as they like.
 
-Using this service:
+### Using This Service:
 Run the elf executable "Server" found in CS321-Project/Server/cmake-build-debug and note the ipv4 address of the machine it is running on. Then, run "Client" found in CS321-Project/Client/cmake-build-debug and enter the server's ip address, your username, and the username of the person you'd like to communicate with. If the other person successfully does the same, a connection will be established by the server, and you will be able to send messages by entering them at the prompt and pressing enter. Note that due to the constraints of the command line interface, you must occasionally hit enter to refresh the program output, as it must first obtain your input before continuing the program.
 
 NOTE: It is best to be careful with the usernames provided to the program, as multiple users attempting to use the same name is untested and may produce unintended results. Additionally, it is important to note that the information sent using this service is not encrypted or encapsulated in any way, so it would be very easy for any untrustworthy people on your network to steal any information sent.
+
+### Design Process:
+I have chosen to create a direct-messaging service for a number of reasons. Firstly, I needed something that brought me into close contact with the operating system, which is easily fulfilled by this project due to the number of syscalls made in order to access the network. Secondly, I wanted to learn to use network sockets because I had never witten a program that utilized a network of any kind, and I thought it would be achievable, challenging, and informative. Thirdly, direct-messaging is integral to the history of the internet as well as our everyday lives, and is about as simple as a network application can get, so it seemed a reasonable first step.
+
+I have chosen to structure the project in a traditional client-server model, rather than peer-to-peer, mostly because it seemed far simpler. Also, in the lib directory, you will find that I have created a class Connection, which makes the use of the network far more friendly to the C++ programmer by abstracting away all of the typical C-style function calls and reducing their operation to a simple, object-oriented interface. This class has worked well in testing so far. Additionally, I have created a class Chat for the Server program which, at least at present, holds just two Connections and manages the interaction between them. This class requires further testing and development, as do the main functions for Client and Server.
