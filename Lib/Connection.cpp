@@ -62,13 +62,21 @@ void Connection::setup()
         throw;
     }
 
-    // bind the socket descriptor to the port and handle errors but only if we're the server
+    // bind the socket descriptor to the port, mark this port as listening, and handle errors
+    // but only if we're the server
     if (address_.empty())
     {
         if (bind(sockDesc_, addrInfo_->ai_addr, addrInfo_->ai_addrlen) == -1)
         {
             perror("Call to bind failed");
             throw;
+        }
+
+        // listen for connections
+        int maxConnections = 10;
+        if(listen(sockDesc_, maxConnections) == -1)
+        {
+            perror("Call to listen failed");
         }
     }
 }
@@ -88,19 +96,11 @@ bool Connection::connect() const
 // establishes a connection with those who reach out
 std::shared_ptr<Connection> Connection::acceptIncoming()
 {
-    // listen for connections
-    int maxConnections = 10;
-    if(listen(sockDesc_, maxConnections) == -1)
-    {
-        perror("Call to listen failed");
-        return nullptr;
-    }
-
     // accept a connection
     sockaddr_storage clientAddr{};
     socklen_t addr_size = sizeof(clientAddr);
-    int sockDesc = accept(sockDesc_, (sockaddr *)&clientAddr, &addr_size);
-    if (sockDesc == -1)
+    int sockDesc = accept4(sockDesc_, (sockaddr *)&clientAddr, &addr_size, SOCK_NONBLOCK);
+    if (sockDesc == -1 && errno != EAGAIN && errno != EWOULDBLOCK)
     {
         perror("Call to accept failed");
         return nullptr;
@@ -141,8 +141,8 @@ std::string Connection::receiveInfo() const
     char* cInfo = new char[maxSize];
 
     // TODO: make this loop until the buffer is empty
-    int result = recv(sockDesc_, (void*)cInfo, maxSize, 0);
-    if (result == -1)
+    int result = recv(sockDesc_, (void*)cInfo, maxSize, MSG_DONTWAIT);
+    if (result == -1 && errno != EAGAIN && errno != EWOULDBLOCK)
     {
         perror("Call to recv failed");
         return "";

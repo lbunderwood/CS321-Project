@@ -46,11 +46,12 @@ int main()
                 if(theirName.empty())
                 {
                     theirName = newClient->receiveInfo();
+                    if(!theirName.empty())
+                        std::cout << "First name received successfully.\n\n";
                 }
                 // put in the second one as the otherName
                 else
                 {
-                    std::cout << "First name received successfully.\n\n";
                     otherName = newClient->receiveInfo();
                 }
             }
@@ -81,11 +82,12 @@ int main()
         // update everyone's messages
         for(size_t i = 0; i < activeChats.size(); ++i)
         {
+            activeChats[i].updateMsgs();
             if (i == activeChats.size() - 1)
             {
                 std::cout << "messages updated!\n\n";
             }
-            activeChats[i].updateMsgs();
         }
+        std::cout << "its ya boi\n\n";
     }
 }
