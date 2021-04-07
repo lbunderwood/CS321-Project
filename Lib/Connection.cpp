@@ -54,7 +54,7 @@ void Connection::setup()
     addrInfo_ = std::make_unique<addrinfo>(*rawAddr);
 
     // get a socket descriptor
-    sockDesc_ = socket(rawAddr->ai_family, rawAddr->ai_socktype, rawAddr->ai_protocol);
+    sockDesc_ = socket(rawAddr->ai_family, rawAddr->ai_socktype | SOCK_NONBLOCK, rawAddr->ai_protocol);
     // handle errors
     if (sockDesc_ == -1)
     {
@@ -99,13 +99,18 @@ std::shared_ptr<Connection> Connection::acceptIncoming()
     // accept a connection
     sockaddr_storage clientAddr{};
     socklen_t addr_size = sizeof(clientAddr);
+    std::cout << "Attempting to accept a connection!\n\n";
     int sockDesc = accept4(sockDesc_, (sockaddr *)&clientAddr, &addr_size, SOCK_NONBLOCK);
-    if (sockDesc == -1 && errno != EAGAIN && errno != EWOULDBLOCK)
+    std::cout << "Call to accept 4 complete!\n\n";
+    if (sockDesc == -1)
     {
-        perror("Call to accept failed");
+        if(errno != EAGAIN && errno != EWOULDBLOCK)
+        {
+            perror("Call to accept failed");
+        }
         return nullptr;
     }
-
+    std::cout << "returning connection...\n\n";
     return std::make_shared<Connection>(sockDesc, clientAddr);
 }
 

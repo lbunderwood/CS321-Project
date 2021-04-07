@@ -31,8 +31,7 @@ int main()
         // if we get a connection
         if(newClient != nullptr)
         {
-            std::cout << "new connection opened\n\n";
-
+            std::cout << "new client connected!\n\n";
             connections.push_back(newClient);
             // get their username and the name of the other person
             std::string theirName;
@@ -47,7 +46,6 @@ int main()
                 {
                     theirName = newClient->receiveInfo();
                     if(!theirName.empty())
-                        std::cout << "First name received successfully.\n\n";
                 }
                 // put in the second one as the otherName
                 else
@@ -55,7 +53,6 @@ int main()
                     otherName = newClient->receiveInfo();
                 }
             }
-            std::cout << "Second name received successfully.\n\n";
             // if we have an open request for the person who just connected
             if(openRequests.count(theirName))
             {
@@ -67,7 +64,7 @@ int main()
                 openRequests.erase(theirName);
                 // send a message to everyone to let the clients know they've been connected
                 activeChats.back().broadcast("connection successful");
-                std::cout << "second client connected. chat open for use.\n\n";
+                std::cout << "Chat created!\n\n";
             }
             // otherwise, they connected first
             else
@@ -75,7 +72,6 @@ int main()
                 // create a new chat and add it to openRequests
                 Chat newChat(newClient, theirName, otherName);
                 openRequests.insert(std::make_pair(otherName, std::move(newChat)));
-                std::cout << "first client connected. chat created\n\n";
             }
         }
 
@@ -83,11 +79,6 @@ int main()
         for(size_t i = 0; i < activeChats.size(); ++i)
         {
             activeChats[i].updateMsgs();
-            if (i == activeChats.size() - 1)
-            {
-                std::cout << "messages updated!\n\n";
-            }
         }
-        std::cout << "its ya boi\n\n";
     }
 }
