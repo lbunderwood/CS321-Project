@@ -13,6 +13,12 @@ Connection::Connection(std::string name)
     setup();
 }
 
+// two-parameter constructor
+// takes a socket descriptor and socket address storage
+// sets up a connection that was established via a call to acceptIncoming()
+Connection::Connection(int sockDesc, sockaddr_storage sockAddr)
+    : sockDesc_(sockDesc), sockAddr_(sockAddr), addrInfo_(nullptr), address_("") {}
+
 //destructor - written explicitly to close network connection
 Connection::~Connection()
 {
@@ -80,28 +86,27 @@ bool Connection::connect() const
 // acceptIncoming public member function
 // should only be used by server programs
 // establishes a connection with those who reach out
-bool Connection::acceptIncoming()
+std::shared_ptr<Connection> Connection::acceptIncoming()
 {
     // listen for connections
-    int maxConnections = 1;
+    int maxConnections = 10;
     if(listen(sockDesc_, maxConnections) == -1)
     {
         perror("Call to listen failed");
-        return false;
+        return nullptr;
     }
 
     // accept a connection
     sockaddr_storage clientAddr{};
     socklen_t addr_size = sizeof(clientAddr);
-    sockDesc_ = accept(sockDesc_, (sockaddr *)&clientAddr, &addr_size);
-    if (sockDesc_ == -1)
+    int sockDesc = accept(sockDesc_, (sockaddr *)&clientAddr, &addr_size);
+    if (sockDesc == -1)
     {
         perror("Call to accept failed");
-        return false;
+        return nullptr;
     }
-    sockAddr_ = clientAddr;
 
-    return true;
+    return std::make_shared<Connection>(sockDesc, clientAddr);
 }
 
 // sendInfo function

@@ -14,17 +14,18 @@ int main(int argc, char** argv)
                  << "Please enter the IPv4 address of the server you'd like to connect to: ";
     std::string servAddr;
     std::getline(std::cin, servAddr);
-    std::cout << "\nPlease enter your username: ";
-    std::string myName;
-    std::getline(std::cin, myName);
-    std::cout << "\nPlease enter the username of the person you'd like to talk with: ";
-    std::string theirName;
-    std::getline(std::cin, theirName);
-
     // establish server connection and send an ip you'd like to connect with
     Connection server(servAddr);
     server.connect();
+
+    std::cout << "\nPlease enter your username: ";
+    std::string myName;
+    std::getline(std::cin, myName);
     server.sendInfo(myName);
+
+    std::cout << "\nPlease enter the username of the person you'd like to talk with: ";
+    std::string theirName;
+    std::getline(std::cin, theirName);
     server.sendInfo(theirName);
 
     // hang until connection is established
@@ -55,9 +56,9 @@ int main(int argc, char** argv)
 
         // see if we have any messages
         inMsg = server.receiveInfo();
-        if(inMsg != "\n\n")
+        if(inMsg != "\n\n" && !inMsg.empty())
         {
-            std::cout << theirName << " > " << inMsg;
+            std::cout << theirName << " > " << inMsg << std::endl;
         }
     }
 }

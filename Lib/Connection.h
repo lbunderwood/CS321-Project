@@ -25,18 +25,24 @@ public:     // Constructors and Destructor
     // Default constructor - not used
     Connection() = delete;
 
-    // two-parameter constructor
-    // takes a string specifying an address (empty string if self), and a port number
+    // one-parameter constructor
+    // takes a string specifying an address (empty string if self)
     // gets address info, socket descriptor, and binds to port
     Connection(std::string name);
 
-    // copying is not allowed, but moving is fine, and will be defined automatically.
-    // We just cannot have two objects attempting to manage the same connection.
+    // two-parameter constructor
+    // takes a socket descriptor and socket address storage
+    // sets up a connection that was established via a call to acceptIncoming()
+    // This should ONLY be used by acceptIncoming's call to make_shared, or if you
+    // DEFINITELY know what you're doing.
+    Connection(int sockDesc, sockaddr_storage sockAddr);
+
+    // copying and moving are not allowed. pass pointers around if you must,
+    // but re-binding new connections to the same remote host causes big issues
     Connection(const Connection& other) = delete;
     Connection& operator=(const Connection& other) = delete;
-
-    Connection(Connection&& other) = default;
-    Connection& operator=(Connection&& other) = default;
+    Connection(Connection&& other) = delete;
+    Connection& operator=(Connection&& other) = delete;
 
     // destructor - written explicitly to close network connection
     ~Connection();
@@ -59,7 +65,8 @@ public:     // Public member functions
     // acceptIncoming public member function
     // should only be used by server programs
     // establishes a connection with those who reach out
-    bool acceptIncoming();
+    // returns a pointer to the newly connected client Connection
+    std::shared_ptr<Connection> acceptIncoming();
 
     // sendInfo public member function
     // sends information to connected host

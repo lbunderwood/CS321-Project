@@ -15,7 +15,7 @@ public: // Constructors and destructor
 
     // no copy or default construction allowed
     // move is okay, we just can't have duplicate Connection objects
-    Chat():firstClient_(""), secondClient_("") {throw;}
+    Chat():firstClient_(nullptr), secondClient_(nullptr) {throw;}
     Chat(const Chat& other) = delete;
     Chat& operator=(const Chat& other) = delete;
     Chat(Chat&& other) = default;
@@ -23,7 +23,7 @@ public: // Constructors and destructor
 
     // three-parameter constructor
     // takes a client and the two names that they have sent
-    Chat(Connection& client, const std::string& clientName, const std::string& otherName);
+    Chat(std::shared_ptr<Connection> client, std::string clientName, std::string otherName);
 
 private: // Private member functions for internal use
 
@@ -31,7 +31,7 @@ private: // Private member functions for internal use
 
 public: // Public member functions
 
-    void addSecondClient(Connection& secondClient);
+    void addSecondClient(std::shared_ptr<Connection> secondClient);
 
     void updateMsgs() const;
 
@@ -42,8 +42,8 @@ public: // Public member functions
 private: // Private member variables
 
     // the two clients involved (this may be expanded to allow group chats later)
-    Connection firstClient_;
-    Connection secondClient_;
+    std::shared_ptr<Connection> firstClient_;
+    std::shared_ptr<Connection> secondClient_;
 
     // the usernames chosen by the users -
     // both are assigned by the first user to connect, and they are used
