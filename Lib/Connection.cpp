@@ -99,9 +99,7 @@ std::shared_ptr<Connection> Connection::acceptIncoming()
     // accept a connection
     sockaddr_storage clientAddr{};
     socklen_t addr_size = sizeof(clientAddr);
-    std::cout << "Attempting to accept a connection!\n\n";
     int sockDesc = accept4(sockDesc_, (sockaddr *)&clientAddr, &addr_size, SOCK_NONBLOCK);
-    std::cout << "Call to accept 4 complete!\n\n";
     if (sockDesc == -1)
     {
         if(errno != EAGAIN && errno != EWOULDBLOCK)
@@ -110,7 +108,6 @@ std::shared_ptr<Connection> Connection::acceptIncoming()
         }
         return nullptr;
     }
-    std::cout << "returning connection...\n\n";
     return std::make_shared<Connection>(sockDesc, clientAddr);
 }
 

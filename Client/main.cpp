@@ -18,14 +18,20 @@ int main(int argc, char** argv)
     Connection server(servAddr);
     server.connect();
 
-    std::cout << "\nPlease enter your username: ";
     std::string myName;
-    std::getline(std::cin, myName);
+    while(myName.empty())
+    {
+        std::cout << "\nPlease enter your username: ";
+        std::getline(std::cin, myName);
+    }
     server.sendInfo(myName);
 
-    std::cout << "\nPlease enter the username of the person you'd like to talk with: ";
     std::string theirName;
-    std::getline(std::cin, theirName);
+    while(theirName.empty())
+    {
+        std::cout << "\nPlease enter the username of the person you'd like to talk with: ";
+        std::getline(std::cin, theirName);
+    }
     server.sendInfo(theirName);
 
     // hang until connection is established

@@ -21,9 +21,9 @@ public: // Constructors and destructor
     Chat(Chat&& other) = default;
     Chat& operator=(Chat&& other) = default;
 
-    // three-parameter constructor
-    // takes a client and the two names that they have sent
-    Chat(std::shared_ptr<Connection> client, std::string clientName, std::string otherName);
+    // single-parameter constructor
+    // takes a client pointer
+    explicit Chat(std::shared_ptr<Connection> client);
 
 private: // Private member functions for internal use
 
@@ -31,11 +31,15 @@ private: // Private member functions for internal use
 
 public: // Public member functions
 
+    std::string recvName();
+
     void addSecondClient(std::shared_ptr<Connection> secondClient);
 
     void updateMsgs() const;
 
     std::pair<std::string, std::string> getNames() const;
+
+    std::shared_ptr<Connection> getClient() const;
 
     bool broadcast(const std::string& msg) const;
 
