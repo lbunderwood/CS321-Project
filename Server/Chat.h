@@ -35,7 +35,7 @@ public: // Public member functions
 
     void addSecondClient(std::shared_ptr<Connection> secondClient);
 
-    void updateMsgs() const;
+    bool updateMsgs() const;
 
     std::pair<std::string, std::string> getNames() const;
 

@@ -32,19 +32,24 @@ void Chat::addSecondClient(std::shared_ptr<Connection> secondClient)
     secondClient_ = std::move(secondClient);
 }
 
-void Chat::updateMsgs() const
+bool Chat::updateMsgs() const
 {
     std::string msg1 = firstClient_->receiveInfo();
+    bool output = false;
     if (!msg1.empty() && msg1 != "!leave")
     {
         secondClient_->sendInfo(msg1);
+        output = true;
     }
 
     std::string msg2 = secondClient_->receiveInfo();
     if (!msg2.empty() && msg2 != "!leave")
     {
         firstClient_->sendInfo(msg2);
+        output = true;
     }
+
+    return output;
     // TODO: have something happen when !leave is sent
 }
 

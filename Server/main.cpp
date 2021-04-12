@@ -61,7 +61,12 @@ int main()
                     {
                         // add them to the other chat
                         chatNames[names.first]->addSecondClient(openRequests[i].getClient());
-                        // erase them from openRequests
+
+                        // erase both chats from openRequests
+                        // This is really unfortunate, as this linear-time operation makes this
+                        // for-loop O(n^2), but any data structure with more efficient random-access
+                        // deletion has other restrictions that prevent this loop from performing
+                        // everything it needs to :(
                         openRequests.erase(openRequests.begin() + i);
                         openRequests.erase(openRequests.begin() + std::distance(openRequests.data(), chatNames[names.first]));
                         // add the chat to activeChats
@@ -83,8 +88,10 @@ int main()
         // update everyone's messages
         for(size_t i = 0; i < activeChats.size(); ++i)
         {
-            activeChats[i].updateMsgs();
-            std::cout << "messages updated!\n\n";
+            if(activeChats[i].updateMsgs())
+            {
+                std::cout << "A message was sent!\n\n";
+            }
         }
     }
 }
