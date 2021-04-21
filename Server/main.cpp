@@ -51,9 +51,17 @@ int main()
                 // check to see if they've sent a name yet
                 auto newName = openRequests[i].recvName();
 
+                // check for a disconnection
+                if(newName == "\n\n")
+                {
+                    openRequests.erase(openRequests.begin() + i);
+                    std::cout << "Someone disconnected!\n\n";
+                }
+
                 // if they sent us the name of the person they'd like to connect to
                 if(!names.first.empty() && !newName.empty())
                 {
+                    std::cout << "A name was received!\n\n";
                     // if their name and the person they'd like to connect to correspond to
                     // a chat we already have open
                     if(chatNames.count(names.first) &&
@@ -88,9 +96,15 @@ int main()
         // update everyone's messages
         for(size_t i = 0; i < activeChats.size(); ++i)
         {
-            if(activeChats[i].updateMsgs())
+            int result = activeChats[i].updateMsgs();
+            if(result == 1)
             {
                 std::cout << "A message was sent!\n\n";
+            }
+            else if(result == -1)
+            {
+                activeChats.erase(activeChats.begin() + i);
+                std::cout << "Someone disconnected!\n\n";
             }
         }
     }

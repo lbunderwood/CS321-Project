@@ -22,7 +22,6 @@ Connection::Connection(int sockDesc, sockaddr_storage sockAddr)
 //destructor - written explicitly to close network connection
 Connection::~Connection()
 {
-    // TODO: figure out how to close connections
     freeaddrinfo(addrInfo_.get());
 }
 
@@ -138,11 +137,10 @@ bool Connection::sendInfo(const std::string& info) const
 // returns string of information from connected host
 std::string Connection::receiveInfo() const
 {
-    // set up variables to pass to send
+    // set up variables
     int maxSize = 512;
     char* cInfo = new char[maxSize];
 
-    // TODO: make this loop until the buffer is empty
     int result = recv(sockDesc_, (void*)cInfo, maxSize, MSG_DONTWAIT);
     if (result == -1 && errno != EAGAIN && errno != EWOULDBLOCK)
     {
@@ -151,8 +149,9 @@ std::string Connection::receiveInfo() const
     }
     else if (result == 0)
     {
-        return "";// TODO: write code to close connection
+        return "\n\n";
     }
+
     std::string output(cInfo);
     delete[] cInfo;
     return output;

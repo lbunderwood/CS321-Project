@@ -67,5 +67,7 @@ int main(int argc, char** argv)
             std::cout << theirName << " > " << inMsg << std::endl;
         }
     }
+
+    std::cout << "\n\nThe connection has been closed! Goodbye!";
 }
 
