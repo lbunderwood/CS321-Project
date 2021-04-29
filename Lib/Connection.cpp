@@ -29,6 +29,9 @@ Connection::~Connection()
     freeaddrinfo(addrInfo_);
 }
 
+// setup private member function
+// called to set up addrInfo_ and sockDesc_
+// called by constructor
 void Connection::setup()
 {
     addrinfo hints{};   // a struct of information to pass to getaddrinfo
@@ -137,23 +140,27 @@ bool Connection::sendInfo(const std::string& info) const
 
 // receiveInfo function
 // returns string of information from connected host
+// if host disconnects, "\n\n" is returned to signal this,
+// because it is something that the clients are incapable of sending
 std::string Connection::receiveInfo() const
 {
     // set up variables
     int maxSize = 512;
     char* cInfo = new char[maxSize];
 
+    // receive some information and do error handling
     int result = recv(sockDesc_, (void*)cInfo, maxSize, MSG_DONTWAIT);
     if (result == -1 && errno != EAGAIN && errno != EWOULDBLOCK)
     {
         perror("Call to recv failed");
         return "";
     }
-    else if (result == 0)
+    else if (result == 0)   // recv returns 0 on disconnect
     {
         return "\n\n";
     }
 
+    // return what we received
     std::string output(cInfo);
     delete[] cInfo;
     return output;

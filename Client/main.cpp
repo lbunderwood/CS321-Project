@@ -7,6 +7,19 @@
 #include <string>
 #include "../Lib/Connection.h"
 
+// little function to keep things DRY
+// takes a prompt, insists on getting a name, returns name
+std::string getUsrn(std::string prompt)
+{
+    std::string name;
+    while(name.empty())
+    {
+        std::cout << prompt;
+        std::getline(std::cin, name);
+    }
+    return name;
+}
+
 int main(int argc, char** argv)
 {
     // Print welcome message and collect info from user
@@ -18,20 +31,12 @@ int main(int argc, char** argv)
     Connection server(servAddr);
     server.connect();
 
-    std::string myName;
-    while(myName.empty())
-    {
-        std::cout << "\nPlease enter your username: ";
-        std::getline(std::cin, myName);
-    }
+    // get first username
+    std::string myName = getUsrn("\nPlease enter your username: ");
     server.sendInfo(myName);
 
-    std::string theirName;
-    while(theirName.empty())
-    {
-        std::cout << "\nPlease enter the username of the person you'd like to talk with: ";
-        std::getline(std::cin, theirName);
-    }
+    // get second username
+    std::string theirName = getUsrn("\nPlease enter the username of the person you'd like to talk with: ");
     server.sendInfo(theirName);
 
     // hang until connection is established
@@ -45,11 +50,11 @@ int main(int argc, char** argv)
                  << "or type \"!leave\" to disconnect!\n\n";
 
     // loop until someone disconnects -
-    // the local user will use !leave command to disconnect, while the server
-    // will send "\n\n" to disconnect, as this is a message that the remote user
+    // the local user will use !leave command to disconnect, while Connection will return
+    // "\n\n" to signal a disconnect, as this is a message that the remote user
     // cannot possibly send.
-    std::string outMsg = "";
-    std::string inMsg = "";
+    std::string outMsg;
+    std::string inMsg;
     while(outMsg != "!leave" && inMsg != "\n\n")
     {
         // get user input
