@@ -83,7 +83,7 @@ private:    // private member variables
     std::string address_;
 
     // the struct of information about our connection
-    std::unique_ptr<addrinfo> addrInfo_;
+    addrinfo* addrInfo_;
 
     // holds the socket descriptor for an outgoing connection
     int sockDesc_;

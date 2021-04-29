@@ -68,6 +68,6 @@ int main(int argc, char** argv)
         }
     }
 
-    std::cout << "\n\nThe connection has been closed! Goodbye!";
+    std::cout << "\n\nThe connection has been closed! Goodbye!\n";
 }
 

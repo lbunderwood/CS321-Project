@@ -27,7 +27,7 @@ public: // Constructors and destructor
 
 private: // Private member functions for internal use
 
-
+    int recvSend(std::shared_ptr<Connection> first, std::shared_ptr<Connection> second) const;
 
 public: // Public member functions
 

@@ -22,7 +22,11 @@ Connection::Connection(int sockDesc, sockaddr_storage sockAddr)
 //destructor - written explicitly to close network connection
 Connection::~Connection()
 {
-    freeaddrinfo(addrInfo_.get());
+    if(close(sockDesc_) == -1)
+    {
+        perror("Error in closing connection");
+    }
+    freeaddrinfo(addrInfo_);
 }
 
 void Connection::setup()
@@ -42,18 +46,16 @@ void Connection::setup()
     }
 
     // get address info, store status in status, store info in *servinfo, and handle errors
-    addrinfo* rawAddr;
-    int status = getaddrinfo(cName, std::to_string(PORT).c_str(), &hints, &(rawAddr));
+    int status = getaddrinfo(cName, std::to_string(PORT).c_str(), &hints, &(addrInfo_));
     if (status != 0)
     {
         perror("getaddrinfo call failed.");
         std::cout << "getaddrinfo error: \n" << gai_strerror(status) << std::endl;
         throw;
     }
-    addrInfo_ = std::make_unique<addrinfo>(*rawAddr);
 
     // get a socket descriptor
-    sockDesc_ = socket(rawAddr->ai_family, rawAddr->ai_socktype | SOCK_NONBLOCK, rawAddr->ai_protocol);
+    sockDesc_ = socket(addrInfo_->ai_family, addrInfo_->ai_socktype | SOCK_NONBLOCK, addrInfo_->ai_protocol);
     // handle errors
     if (sockDesc_ == -1)
     {
@@ -119,7 +121,7 @@ bool Connection::sendInfo(const std::string& info) const
     std::size_t length = strlen(cInfo);
     std::size_t sent = 0;
 
-    while (length > sent)
+    while (sent < length)
     {
         int result = send(sockDesc_, (const void*)&cInfo[sent], length - sent, 0);
         if (result == -1)

@@ -9,6 +9,8 @@
 Chat::Chat(std::shared_ptr<Connection> client)
     : firstClient_(std::move(client)), secondClient_(nullptr) {}
 
+
+
 std::string Chat::recvName()
 {
     std::string name = firstClient_->receiveInfo();
@@ -34,31 +36,21 @@ void Chat::addSecondClient(std::shared_ptr<Connection> secondClient)
 
 int Chat::updateMsgs() const
 {
-    bool output = -1;
-    std::string msg1 = firstClient_->receiveInfo();
+    int output1 = recvSend(firstClient_, secondClient_);
+    int output2 = recvSend(secondClient_, firstClient_);
 
-    if(msg1.empty())
+    if(output1 == 0 && output2 == 0)
     {
-        output = 0;
+        return 0;
     }
-    else if (msg1 != "\n\n" && msg1 != "!leave")
+    else if(output1 == -1 || output2 == -1)
     {
-        secondClient_->sendInfo(msg1);
-        output = 1;
+        return -1;
     }
-
-    std::string msg2 = secondClient_->receiveInfo();
-    if(msg2.empty())
+    else
     {
-        output = 0;
+        return 1;
     }
-    else if (msg2 != "\n\n" && msg1 != "!leave")
-    {
-        firstClient_->sendInfo(msg2);
-        output = 1;
-    }
-
-    return output;
 }
 
 std::pair<std::string, std::string> Chat::getNames() const
@@ -74,4 +66,24 @@ std::shared_ptr<Connection> Chat::getClient() const
 bool Chat::broadcast(const std::string& msg) const
 {
     return firstClient_->sendInfo(msg) && secondClient_->sendInfo(msg);
+}
+
+int Chat::recvSend(std::shared_ptr<Connection> first, std::shared_ptr<Connection> second) const
+{
+    int output = 0;
+    std::string msg = first->receiveInfo();
+
+    if(msg == "\n\n" || msg == "!leave")
+    {
+        return -1;
+    }
+    else if (!msg.empty())
+    {
+        second->sendInfo(msg);
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
